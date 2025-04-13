@@ -12,6 +12,11 @@ class MultiAnnotationGroup {
   final PointAnnotation? addressAnnotation; // short address
   final PointAnnotation? dateAnnotation;
 
+  // Fields to store the latest text values when user chooses "Move"
+  String? originalTitle;
+  String? originalAddress;
+  String? originalDate;
+
   MultiAnnotationGroup({
     required this.iconAnnotation,
     this.titleAnnotation,
@@ -26,6 +31,23 @@ class MultiAnnotationGroup {
         if (addressAnnotation != null) addressAnnotation!,
         if (dateAnnotation != null) dateAnnotation!,
       ];
+
+  /// Call this right when the user presses "Move" to store the current text
+  /// fields. Added logger statements so you can see exactly what’s being stored.
+  void cacheOriginalTextFields() {
+    logger.i('>>> cacheOriginalTextFields() called for icon ID=${iconAnnotation.id}');
+
+    logger.i('>>> Current title field: ${titleAnnotation?.textField}');
+    logger.i('>>> Current address field: ${addressAnnotation?.textField}');
+    logger.i('>>> Current date field: ${dateAnnotation?.textField}');
+
+    // Store them
+    originalTitle = titleAnnotation?.textField;
+    originalAddress = addressAnnotation?.textField;
+    originalDate = dateAnnotation?.textField;
+
+    logger.i('>>> originalTitle=$originalTitle, originalAddress=$originalAddress, originalDate=$originalDate');
+  }
 }
 
 class MapAnnotationsManager {
@@ -123,10 +145,10 @@ class MapAnnotationsManager {
     );
     final iconAnn = await _annotationManager.create(iconOptions);
 
-    // 3) Title annotation (largest text).
-    // If there is no address provided, shift the title down further (closer to the marker).
+    // 3) Title annotation
     PointAnnotation? titleAnn;
     if (title != null && title.isNotEmpty) {
+      // If no address, shift the title a little differently
       final double titleOffset = (shortAddress == null || shortAddress.isEmpty) ? -2 : -2.5;
       final titleOptions = PointAnnotationOptions(
         geometry: mapPoint,
@@ -142,7 +164,7 @@ class MapAnnotationsManager {
       titleAnn = await _annotationManager.create(titleOptions);
     }
 
-    // 4) Address annotation (medium text size).
+    // 4) Address annotation
     PointAnnotation? addressAnn;
     if (shortAddress != null && shortAddress.isNotEmpty) {
       final addrOptions = PointAnnotationOptions(
@@ -160,7 +182,7 @@ class MapAnnotationsManager {
       addressAnn = await _annotationManager.create(addrOptions);
     }
 
-    // 5) Date annotation (medium text size) using finalDateText.
+    // 5) Date annotation
     PointAnnotation? dateAnn;
     if (finalDateText != null && finalDateText.isNotEmpty) {
       final dateOptions = PointAnnotationOptions(
@@ -173,7 +195,7 @@ class MapAnnotationsManager {
         textHaloColor: 0xFF000000,
         textHaloWidth: 1.0,
         textHaloBlur: 0.5,
-        textMaxWidth: 1000.0, // Ensures the combined date stays on one line.
+        textMaxWidth: 1000.0,
       );
       dateAnn = await _annotationManager.create(dateOptions);
     }
@@ -288,11 +310,10 @@ class MapAnnotationsManager {
   // LOADING FROM HIVE (EXAMPLE)
   // --------------------------------------------------------------------------
   Future<void> loadAnnotationsFromHive({String? worldId}) async {
-    logger.i('loadAnnotationsFromHive() => loading annotations' +
-        (worldId != null ? ' for worldId: $worldId' : ''));
+    logger.i('loadAnnotationsFromHive() => loading annotations'
+        + (worldId != null ? ' for worldId: $worldId' : ''));
 
     final hiveAnnotations = await localAnnotationsRepository.getAnnotations();
-
     final filteredAnnotations = (worldId != null)
         ? hiveAnnotations.where((ann) => ann.worldId == worldId).toList()
         : hiveAnnotations.toList();
@@ -335,6 +356,18 @@ class MapAnnotationsManager {
       logger.i('Linked Hive ID=${ann.id} to iconID=${group.iconAnnotation.id}');
     }
     logger.i('Completed load from Hive');
+  }
+
+  // --------------------------------------------------------------------------
+  // HELPER: findGroupForAnnotation
+  // --------------------------------------------------------------------------
+  MultiAnnotationGroup? findGroupForAnnotation(PointAnnotation annotation) {
+    for (final group in _multiAnnotations) {
+      if (group.all.contains(annotation)) {
+        return group;
+      }
+    }
+    return null;
   }
 
   // --------------------------------------------------------------------------
