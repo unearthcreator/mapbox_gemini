@@ -1,0 +1,2 @@
+C:/Users/marti/Desktop/mapbox_latest-d21f63b7181b9e18b5e2fc1f97caee6999c6c1f1/android/app/.cxx/Debug/2b5i2y42/x86/CMakeFiles/edit_cache.dir
+C:/Users/marti/Desktop/mapbox_latest-d21f63b7181b9e18b5e2fc1f97caee6999c6c1f1/android/app/.cxx/Debug/2b5i2y42/x86/CMakeFiles/rebuild_cache.dir

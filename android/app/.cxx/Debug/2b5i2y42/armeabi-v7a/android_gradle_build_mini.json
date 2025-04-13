@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "C:\\Users\\marti\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\marti\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\marti\\Desktop\\mapbox_latest-d21f63b7181b9e18b5e2fc1f97caee6999c6c1f1\\android\\app\\.cxx\\Debug\\2b5i2y42\\armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\marti\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\marti\\Desktop\\mapbox_latest-d21f63b7181b9e18b5e2fc1f97caee6999c6c1f1\\android\\app\\.cxx\\Debug\\2b5i2y42\\armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
