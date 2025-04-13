@@ -127,7 +127,7 @@ class MapAnnotationsManager {
     // If there is no address provided, shift the title down further (closer to the marker).
     PointAnnotation? titleAnn;
     if (title != null && title.isNotEmpty) {
-      final double titleOffset = (shortAddress == null || shortAddress.isEmpty) ? -1.5 : -4.0;
+      final double titleOffset = (shortAddress == null || shortAddress.isEmpty) ? -1.2 : -2.5;
       final titleOptions = PointAnnotationOptions(
         geometry: mapPoint,
         textField: title,
@@ -150,7 +150,7 @@ class MapAnnotationsManager {
         textField: shortAddress,
         textSize: 16.0,
         textAnchor: TextAnchor.BOTTOM,
-        textOffset: [0, -2.8],
+        textOffset: [0, -2],
         textColor: 0xFFFFFFFF,
         textHaloColor: 0xFF000000,
         textHaloWidth: 1.0,
