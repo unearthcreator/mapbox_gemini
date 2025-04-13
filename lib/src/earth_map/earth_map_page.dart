@@ -279,24 +279,27 @@ class EarthMapPageState extends State<EarthMapPage> {
   // ---------------------------------------------------------------------
   // MENU BUTTON CALLBACKS
   // ---------------------------------------------------------------------
-void _handleMoveOrLockButton() {
-  setState(() {
-    if (_isDragging) {
-      // This means it was already in "Move" mode, now user clicked "Lock"
-      _gestureHandler.hideTrashCanAndStopDragging();
-      _isDragging = false;
-      _showRelocateHint = false;
-    } else {
-      // User just clicked "Move," so we call cacheOriginalTextFields()
-      final group = _annotationsManager.findGroupForAnnotation(_annotationMenuAnnotation!);
-      group?.cacheOriginalTextFields();
+  void _handleMoveOrLockButton() {
+    setState(() {
+      if (_isDragging) {
+        // Means we were in “Move” mode and the user clicked “Lock”
+        final group = _annotationsManager.findGroupForAnnotation(_annotationMenuAnnotation!);
+        group?.clearCachedTextFields();  // <--- Clear the cached text fields
 
-      _gestureHandler.startDraggingSelectedAnnotation();
-      _isDragging = true;
-      _showRelocateHint = true;
-    }
-  });
-}
+        _gestureHandler.hideTrashCanAndStopDragging();
+        _isDragging = false;
+        _showRelocateHint = false;
+      } else {
+        // Means the user just clicked “Move”
+        final group = _annotationsManager.findGroupForAnnotation(_annotationMenuAnnotation!);
+        group?.cacheOriginalTextFields();
+
+        _gestureHandler.startDraggingSelectedAnnotation();
+        _isDragging = true;
+        _showRelocateHint = true;
+      }
+    });
+  }
 
   Future<void> _handleEditButton() async {
     if (_annotationMenuAnnotation == null) {

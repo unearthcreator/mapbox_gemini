@@ -48,7 +48,16 @@ class MultiAnnotationGroup {
 
     logger.i('>>> originalTitle=$originalTitle, originalAddress=$originalAddress, originalDate=$originalDate');
   }
+
+    void clearCachedTextFields() {
+    logger.i('>>> clearCachedTextFields() called for icon ID=${iconAnnotation.id}');
+    originalTitle = null;
+    originalAddress = null;
+    originalDate = null;
 }
+
+}
+
 
 class MapAnnotationsManager {
   final PointAnnotationManager _annotationManager;
